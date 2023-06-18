@@ -8,9 +8,6 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use('/api', api);
-
-// app.use(express.static('public'));
 
 // GET * Route
 app.get('/', (req, res) =>
@@ -29,9 +26,22 @@ app.get('/api/notes', (req, res) => {
 
 // POST Route for notes api
 app.post('/api/notes', (req, res) => {
-    // add read, push, write functions
+  // TODO: add read, push, write functions
+  const { title, text } = req.body;
+  if (title && text) {
+    const newNote = {
+      title,
+      text,
+    };
+    console.log(newNote);
+    const notes = JSON.parse(fs.readFileSync('./db/db.json', 'utf-8'));
+    notes.push(newNote);
+    console.log(notes);
+    fs.writeFileSync('./db/db.json', JSON.stringify(notes));
     res.sendFile(path.join(__dirname, '/db/db.json'))
+  }
 });
+
 
 // start server
 app.listen(PORT, () =>
